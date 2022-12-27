@@ -66,10 +66,13 @@ run_vm() {
 			-A -H -P -w \
 			-c sockets=1,cores=1,threads=1 \
 			-m 2G \
-			-l bootrom,/usr/local/share/uefi-firmware/BHYVE_BHF_UEFI.fd \
+			-l bootrom,/usr/local/share/uefi-firmware/BHYVE_BHF_UEFI.fd,/vms/samplevm/EFI_VARS.fd \
 			-s 0,hostbridge \
 			-s 2,fbuf,rfb=0.0.0.0:"${vm_vnc_port}",w=1280,h=1024 \
 			-s 3,xhci,tablet \
+			-s 10,nvme,/dev/zvol/zroot/vms/samplevm/disk0 \
+			-s 15,ahci-cd,/vms/debian-installer.iso,ro \
+			-s 20,virtio-net,tap0 \
 			-s 31,lpc \
 			"${vm_name}" || _bhyve_rc=$?
 
